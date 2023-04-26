@@ -11,34 +11,21 @@ library(rjson)
 synapser::synLogin()
 source('awscli_utils.R')
 
-
 #############
 # Parameters
 #############
-FILE_LIST_OUTPUT = 's3files.txt' 
-# file name of the file where the aws ls output is saved
-
-SOURCE_BUCKET = 'sc-237179673806-pp-i7vklp56the66-s3bucket-eal8qlgc87kj'
-# S3 bucket whose objects are being listed
-
-SYNAPSE_PARENT_ID = 'syn51364747'
-# Synapse location where the objects are listed
-
-AWS_DOWNLOAD_LOCATION = 'temp_aws_2'
-# Local location where Source bucket files are synced to
-
+source('params.R')
 
 #############
 # NOTE
 #############
 ### First run data_sync.R and sync the S3 bucket to the local EC2 instance
 
-
 #############
 # Get bucket params and file list
 #############
-## Get a list of all Objects in the S3 bucket
-s3lsBucketObjects(source_bucket = paste0('s3://', SOURCE_BUCKET,'/'),
+## Get a list of all Objects in the PRE_ETL S3 bucket 
+s3lsBucketObjects(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/'),
                   output_file = FILE_LIST_OUTPUT)
 
 # Get bucket params
