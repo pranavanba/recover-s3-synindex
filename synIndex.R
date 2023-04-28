@@ -51,7 +51,6 @@ bucket_params <- list(uploadType='S3',
 # we don't need those
 localDirs <- list.dirs(path = AWS_DOWNLOAD_LOCATION, full.names = FALSE) 
 
-
 ## The folders we want to show in synapse
 ## This would depend on the how the data is organized in the main S3 INGRESS bucket
 FOLDERS_TO_SYNC_SYNAPSE <- c('adults',
@@ -65,7 +64,6 @@ dirs_to_delete <- dplyr::setdiff(localDirs, c(FOLDERS_TO_SYNC_SYNAPSE, "")) # ""
 for(dir_ in dirs_to_delete){
   unlink(paste0(AWS_DOWNLOAD_LOCATION,"/",dir_), recursive = TRUE)
 }
-
 
 # localFileList <- list.files(path = AWS_DOWNLOAD_LOCATION,
 #                             all.files = TRUE, # get hidden files too
@@ -87,6 +85,7 @@ SYSTEM_COMMAND <- glue::glue('synapse -u "{SYNAPSE_USERNAME}" -p "{SYNAPSE_PASSW
 
 ## Generate manifest file
 system(SYSTEM_COMMAND)
+
 ###########
 ## Get a list of all files to upload and their synapse locations(parentId) 
 ###########
@@ -100,13 +99,11 @@ synapse_manifest <- read.csv('current_manifest.tsv', sep = '\t', stringsAsFactor
 
 synapse_fileview <- synapser::synTableQuery(paste0('SELECT * FROM ', SYNAPSE_FILEVIEW_ID))$asDataFrame()
 
-
 ## find those files that are not in the fileview
 synapse_manifest_to_upload <- synapse_manifest %>% 
   dplyr::anti_join(synapse_fileview %>% 
                      dplyr::select(parent = parentId,
                                    file_key = dataFileKey))
-
 
 #############
 # Index in Synapse
