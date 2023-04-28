@@ -34,8 +34,8 @@ SYNAPSE_FILEVIEW_ID = 'syn51399596'
 # Get bucket params and file list
 #############
 ## Get a list of all Objects in the PRE_ETL S3 bucket 
-s3lsBucketObjects(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/'),
-                  output_file = FILE_LIST_OUTPUT)
+# s3lsBucketObjects(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/'),
+#                   output_file = FILE_LIST_OUTPUT)
 
 # Get bucket params
 bucket_params <- list(uploadType='S3',
