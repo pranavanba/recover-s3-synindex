@@ -80,6 +80,7 @@ for(dir_ in dirs_to_delete){
 old_path <- Sys.getenv("PATH")
 Sys.setenv(PATH = paste(old_path, "/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/PythonEmbedInR/bin", sep = ":"))
 ## When we install synapser, it installs synapseclient and along with it the synapse cmd line client
+## We need to add the location of synapseclient to the system path so that it can recognize synapse cmd 
 
 SYSTEM_COMMAND <- glue::glue('synapse -u "{SYNAPSE_USERNAME}" -p "{SYNAPSE_PASSWORD}" manifest --parent-id {SYNAPSE_PARENT_ID} --manifest current_manifest.tsv {AWS_DOWNLOAD_LOCATION}')
 
@@ -91,15 +92,17 @@ system(SYSTEM_COMMAND)
 ###########
 STR_LEN_AWS_DOWNLOAD_LOCATION = stringr::str_length(AWS_DOWNLOAD_LOCATION)
 
+## All files present locally from manifest
 synapse_manifest <- read.csv('current_manifest.tsv', sep = '\t', stringsAsFactors = F) %>% 
   dplyr::filter(path != paste0(AWS_DOWNLOAD_LOCATION,'/owner.txt')) %>%  # need not create a dataFileHandleId for owner.txt
   dplyr::rowwise() %>% 
   dplyr::mutate(file_key = stringr::str_sub(string = path, start = STR_LEN_AWS_DOWNLOAD_LOCATION+2)) %>% # location of file from home folder of S3 bucket 
   dplyr::ungroup()
 
+## All currently indexed files in Synapse
 synapse_fileview <- synapser::synTableQuery(paste0('SELECT * FROM ', SYNAPSE_FILEVIEW_ID))$asDataFrame()
 
-## find those files that are not in the fileview
+## find those files that are not in the fileview - files that need to be indexed
 synapse_manifest_to_upload <- synapse_manifest %>% 
   dplyr::anti_join(synapse_fileview %>% 
                      dplyr::select(parent = parentId,
@@ -108,13 +111,14 @@ synapse_manifest_to_upload <- synapse_manifest %>%
 #############
 # Index in Synapse
 #############
-## For each file index it in Synapse given a parent synapse folder
+
 # for(file_ in localFileList){
 #   print(file_)
 #   absolute_file_path <- tools::file_path_as_absolute(paste0(AWS_DOWNLOAD_LOCATION,'/',file_))
 #   print(absolute_file_path)
 # }
 
+## For each file index it in Synapse given a parent synapse folder
 if(nrow(synapse_manifest_to_upload) > 0){ # there are some files to upload
   for(file_number in seq(nrow(synapse_manifest_to_upload))){
     
