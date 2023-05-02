@@ -65,11 +65,6 @@ for(dir_ in dirs_to_delete){
   unlink(paste0(AWS_DOWNLOAD_LOCATION,"/",dir_), recursive = TRUE)
 }
 
-# localFileList <- list.files(path = AWS_DOWNLOAD_LOCATION,
-#                             all.files = TRUE, # get hidden files too
-#                             recursive = TRUE, # get files inside sub-folders (if any)
-#                             full.names = FALSE) # to get the directory path prepended to the file name
-
 #############
 # Get a manifest of files to upload
 #############
