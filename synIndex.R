@@ -5,9 +5,9 @@
 #############
 ### Synapse credentials
 #############
-synapse_creds <- read.table('synapse_creds.txt', header = F, sep = '=', stringsAsFactors = F) 
-SYNAPSE_USERNAME <- synapse_creds$V2[1]
-SYNAPSE_PASSWORD <- synapse_creds$V2[2]
+# Set the environment variables .Renviron file in your home folder. Refer to README for more details
+SYNAPSE_USERNAME= Sys.getenv('SYNAPSE_USERNAME')
+SYNAPSE_PASSWORD= Sys.getenv('SYNAPSE_PASSWORD')
 
 #############
 # Required functions and libraries
@@ -16,14 +16,14 @@ library(tidyverse)
 library(synapser)
 library(synapserutils)
 library(rjson)
-synapser::synLogin(SYNAPSE_USERNAME, SYNAPSE_PASSWORD)
+synapser::synLogin(SYNAPSE_USERNAME,
+                   SYNAPSE_PASSWORD)
 source('awscli_utils.R')
 
 #############
 # Required Parameters
 #############
 source('params.R')
-SYNAPSE_FILEVIEW_ID = 'syn51399596'
 
 #############
 # NOTE
@@ -111,13 +111,6 @@ synapse_manifest_to_upload <- synapse_manifest %>%
 #############
 # Index in Synapse
 #############
-
-# for(file_ in localFileList){
-#   print(file_)
-#   absolute_file_path <- tools::file_path_as_absolute(paste0(AWS_DOWNLOAD_LOCATION,'/',file_))
-#   print(absolute_file_path)
-# }
-
 ## For each file index it in Synapse given a parent synapse folder
 if(nrow(synapse_manifest_to_upload) > 0){ # there are some files to upload
   for(file_number in seq(nrow(synapse_manifest_to_upload))){
@@ -128,11 +121,7 @@ if(nrow(synapse_manifest_to_upload) > 0){ # there are some files to upload
     s3_file_key = synapse_manifest_to_upload$file_key[file_number]
     # this would be the location of the file in the S3 bucket, in the local it is at {AWS_DOWNLOAD_LOCATION}/
     
-    # print(file_)
-    # print(parent_id)
-    
     absolute_file_path <- tools::file_path_as_absolute(file_) # local absolute path
-    # print(absolute_file_path)
     
     temp_syn_obj <- synapser::synCreateExternalS3FileHandle(
       bucket_name = bucket_params$bucket,
