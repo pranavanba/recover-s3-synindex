@@ -11,9 +11,9 @@ source('params.R')
 #############
 # <<values below are test values>>
 s3SyncBuckets(source_bucket = paste0('s3://', INGRESS_BUCKET,'/'),
-              destination_bucket = paste0('s3://', PRE_ETL_BUCKET,'/'))
+              destination_bucket = paste0('s3://', PRE_ETL_BUCKET,'/staging/'))
 #############
 # Sync the pre-ETL bucket to local EC2 instance
 #############
 # <<values below are test values>>
-s3SyncToLocal(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/'), local_destination = AWS_DOWNLOAD_LOCATION)
+s3SyncToLocal(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/staging'), local_destination = AWS_DOWNLOAD_LOCATION)
