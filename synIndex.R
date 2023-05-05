@@ -33,7 +33,7 @@ source('params.R')
 STR_LEN_AWS_DOWNLOAD_LOCATION = stringr::str_length(AWS_DOWNLOAD_LOCATION)
 
 ## All files present locally from manifest
-synapse_manifest <- read.csv('current_manifest.tsv', sep = '\t', stringsAsFactors = F) %>% 
+synapse_manifest <- read.csv('./current_manifest.tsv', sep = '\t', stringsAsFactors = F) %>% 
   dplyr::filter(path != paste0(AWS_DOWNLOAD_LOCATION,'/owner.txt')) %>%  # need not create a dataFileHandleId for owner.txt
   dplyr::rowwise() %>% 
   dplyr::mutate(file_key = stringr::str_sub(string = path, start = STR_LEN_AWS_DOWNLOAD_LOCATION+2)) %>% # location of file from home folder of S3 bucket 
