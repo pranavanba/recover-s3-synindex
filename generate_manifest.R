@@ -1,6 +1,9 @@
 #############
 # Get a manifest of files to upload
 #############
+
+### First run data_sync.R
+
 ## The S3 bucket is synced to AWS_DOWNLOAD_LOCATION locally. 
 ## We will use synapse cmd line client manifest function to replicate the folder structure 
 ## but NOT upload the files. We will create a datafilehandleid in place later instead of uploading file

@@ -2,6 +2,8 @@
 ## Index S3 Objects in Synapse
 ################################
 
+## First run data_sync.R and generate_manifest.R in that order, before executing code below
+
 #############
 ### Synapse credentials
 #############
