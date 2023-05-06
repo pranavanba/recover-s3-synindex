@@ -8,7 +8,7 @@ INGRESS_BUCKET = 'sc-237179673806-pp-a2c32zmbbq566-s3bucket-2vq5unuhcxjo'
 PRE_ETL_BUCKET = 'sc-237179673806-pp-lytud6mnzjczm-s3bucket-edpunhjxp7bs'
 # S3 bucket to where objects are being copied into
 
-AWS_DOWNLOAD_LOCATION = './temp_aws'
+AWS_DOWNLOAD_LOCATION = './temp_aws/staging/'
 # Local location where Source bucket files are synced to
 
 FILE_LIST_OUTPUT = 's3files.txt' 
