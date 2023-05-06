@@ -5,7 +5,8 @@ This repository helps index S3 objects in Synapse from a S3 bucket attached to a
 
 ## Installation/Pre-requisites
 1. Spin up a new EC2 Rstudio Notebook instance.
-2. Install synapseclient in the terminal using the folloiwing command
+2. Upgrade pip `python -m pip install --upgrade pip` before trying to install synapseclient
+3. Install synapseclient in the terminal using the folloiwing command
 `pip install synapseclient`. 
 Note: If you are having issues during installation, consider upgrading your pip `python -m pip install --upgrade pip` before trying to reinstall synapseclient - this should clear most issues. If you still have issues try force re-install synapseclient from the terminal `pip install --upgrade --force-reinstall synapseclient`
 3. Create a `.Renviron` file in the home folder with the environment variables `SYNAPSE_USERNAME`, `SYNAPSE_PASSWORD` and `SYNASPECLIENT_INSTALL_PATH`, where `SYNAPSECLIENT_INSTALL_PATH` is the path where synapseclient was installed in step 2.
