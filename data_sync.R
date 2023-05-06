@@ -3,8 +3,8 @@
 # of the data provided to us by Care Evolution(CE) in the input bucket.
 ##############
 ## Required functions and parameters
-source('awscli_utils.R')
-source('params.R')
+source('~/recover-s3-synindex/awscli_utils.R')
+source('~/recover-s3-synindex/params.R')
 
 #############
 # Sync S3 buckets 

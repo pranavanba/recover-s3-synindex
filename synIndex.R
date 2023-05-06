@@ -20,12 +20,12 @@ library(synapserutils)
 library(rjson)
 synapser::synLogin(SYNAPSE_USERNAME,
                    SYNAPSE_PASSWORD)
-source('awscli_utils.R')
+source('~/recover-s3-synindex/awscli_utils.R')
 
 #############
 # Required Parameters
 #############
-source('params.R')
+source('~/recover-s3-synindex/params.R')
 
 ###########
 ## Get a list of all files to upload and their synapse locations(parentId) 

@@ -9,7 +9,7 @@
 SYNAPSE_USERNAME= Sys.getenv('SYNAPSE_USERNAME')
 SYNAPSE_PASSWORD= Sys.getenv('SYNAPSE_PASSWORD')
 SYNAPSECLIENT_INSTALL_PATH = Sys.getenv('SYNAPSECLIENT_INSTALL_PATH')
-source('params.R')
+source('~/recover-s3-synindex/params.R')
 ### First run data_sync.R
 
 ## The S3 bucket is synced to AWS_DOWNLOAD_LOCATION locally. 
