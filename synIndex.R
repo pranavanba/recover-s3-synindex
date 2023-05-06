@@ -2,67 +2,80 @@
 ## Index S3 Objects in Synapse
 ################################
 
+## First run data_sync.R and generate_manifest.R in that order, before executing code below
+
+#############
+### Synapse credentials
+#############
+# Set the environment variables .Renviron file in your home folder. Refer to README for more details
+SYNAPSE_USERNAME= Sys.getenv('SYNAPSE_USERNAME')
+SYNAPSE_PASSWORD= Sys.getenv('SYNAPSE_PASSWORD')
+
 #############
 # Required functions and libraries
 #############
 library(tidyverse)
 library(synapser)
+library(synapserutils)
 library(rjson)
-synapser::synLogin()
+synapser::synLogin(SYNAPSE_USERNAME,
+                   SYNAPSE_PASSWORD)
 source('awscli_utils.R')
 
 #############
-# Parameters
+# Required Parameters
 #############
 source('params.R')
 
-#############
-# NOTE
-#############
-### First run data_sync.R and sync the S3 bucket to the local EC2 instance
+###########
+## Get a list of all files to upload and their synapse locations(parentId) 
+###########
+STR_LEN_AWS_DOWNLOAD_LOCATION = stringr::str_length(AWS_DOWNLOAD_LOCATION)
 
-#############
-# Get bucket params and file list
-#############
-## Get a list of all Objects in the PRE_ETL S3 bucket 
-s3lsBucketObjects(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/'),
-                  output_file = FILE_LIST_OUTPUT)
+## All files present locally from manifest
+synapse_manifest <- read.csv('./current_manifest.tsv', sep = '\t', stringsAsFactors = F) %>% 
+  dplyr::filter(path != paste0(AWS_DOWNLOAD_LOCATION,'/owner.txt')) %>%  # need not create a dataFileHandleId for owner.txt
+  dplyr::rowwise() %>% 
+  dplyr::mutate(file_key = stringr::str_sub(string = path, start = STR_LEN_AWS_DOWNLOAD_LOCATION+2)) %>% # location of file from home folder of S3 bucket 
+  dplyr::ungroup()
 
-# Get bucket params
-bucket_params <- list(uploadType='S3',
-                    concreteType='org.sagebionetworks.repo.model.project.ExternalS3StorageLocationSetting',
-                    bucket=SOURCE_BUCKET)
+## All currently indexed files in Synapse
+synapse_fileview <- synapser::synTableQuery(paste0('SELECT * FROM ', SYNAPSE_FILEVIEW_ID))$asDataFrame()
 
-# The above list is just to verify/reference, 
-# since we will replicate the structure locally
-# we will work with that
-
-## Get a list of all local files
-localFileList <- list.files(path = AWS_DOWNLOAD_LOCATION,
-                            all.files = TRUE, # get hidden files too
-                            recursive = TRUE, # get files inside sub-folders (if any)
-                            full.names = FALSE) # to get the directory path prepended to the file name
+## find those files that are not in the fileview - files that need to be indexed
+synapse_manifest_to_upload <- synapse_manifest %>% 
+  dplyr::anti_join(synapse_fileview %>% 
+                     dplyr::select(parent = parentId,
+                                   file_key = dataFileKey))
 
 #############
 # Index in Synapse
 #############
 ## For each file index it in Synapse given a parent synapse folder
-for(file_ in localFileList){
-  print(file_)
-  absolute_file_path <- tools::file_path_as_absolute(paste0(AWS_DOWNLOAD_LOCATION,'/',file_))
-  
-  temp_syn_obj <- synapser::synCreateExternalS3FileHandle(
-    bucket_name = bucket_params$bucket,
-    s3_file_key = file_, # 
-    file_path = absolute_file_path,
-    parent = SYNAPSE_PARENT_ID
-  )
-  
-  f <- File(dataFileHandleId=temp_syn_obj$id, 
-            parentId=SYNAPSE_PARENT_ID,
-            name = temp_syn_obj$fileName) ## set file name same as the one from realpath
-  
-  f <- synStore(f)
-  
+if(nrow(synapse_manifest_to_upload) > 0){ # there are some files to upload
+  for(file_number in seq(nrow(synapse_manifest_to_upload))){
+    
+    # file and related synapse parent id 
+    file_= synapse_manifest_to_upload$path[file_number]
+    parent_id = synapse_manifest_to_upload$parent[file_number]
+    s3_file_key = synapse_manifest_to_upload$file_key[file_number]
+    # this would be the location of the file in the S3 bucket, in the local it is at {AWS_DOWNLOAD_LOCATION}/
+    
+    absolute_file_path <- tools::file_path_as_absolute(file_) # local absolute path
+    
+    temp_syn_obj <- synapser::synCreateExternalS3FileHandle(
+      bucket_name = PRE_ETL_BUCKET,
+      s3_file_key = s3_file_key, #
+      file_path = absolute_file_path,
+      parent = parent_id
+    )
+    
+    f <- File(dataFileHandleId=temp_syn_obj$id,
+              parentId=parent_id,
+              name = temp_syn_obj$fileName) ## set file name same as the one from realpath
+    
+    f <- synStore(f)
+    
+  }
 }
 
