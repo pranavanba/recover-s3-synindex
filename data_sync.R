@@ -23,8 +23,8 @@ s3SyncToLocal(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/staging'), local_
 # Get bucket params and file list
 #############
 # We will work with the locally replicated structure 
-# all folders inside the AWS_DOWNLOAD_LOCATION
-localDirs <- list.dirs(path = AWS_DOWNLOAD_LOCATION, full.names = FALSE) 
+# all folders inside the AWS_DOWNLOAD_LOCATION, i.e all folders at AWS_DOWNLOAD_LOCATION/
+localDirs <- list.dirs(path = AWS_DOWNLOAD_LOCATION, full.names = FALSE, recursive = FALSE) 
 
 ## The folders we want to show in synapse
 ## This would depend on the how the data is organized in the main S3 INGRESS bucket
