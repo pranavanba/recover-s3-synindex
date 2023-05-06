@@ -8,6 +8,7 @@
 # Set the environment variables .Renviron file in your home folder. Refer to README for more details
 SYNAPSE_USERNAME= Sys.getenv('SYNAPSE_USERNAME')
 SYNAPSE_PASSWORD= Sys.getenv('SYNAPSE_PASSWORD')
+SYNAPSECLIENT_INSTALL_PATH = Sys.getenv('SYNAPSECLIENT_INSTALL_PATH')
 source('params.R')
 ### First run data_sync.R
 
@@ -17,8 +18,8 @@ source('params.R')
 
 old_path <- Sys.getenv("PATH")
 
-if(!grepl("/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/PythonEmbedInR/bin",old_path)){
-  Sys.setenv(PATH = paste(old_path, "/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/PythonEmbedInR/bin", sep = ":"))
+if(!grepl(SYNAPSECLIENT_INSTALL_PATH,old_path)){
+  Sys.setenv(PATH = paste(old_path, SYNAPSECLIENT_INSTALL_PATH, sep = ":"))
   ## When we install synapser, it installs synapseclient and along with it the synapse cmd line client
   ## We need to add the location of synapseclient to the system path so that it can recognize synapse cmd 
 }

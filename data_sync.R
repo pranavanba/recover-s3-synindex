@@ -12,6 +12,7 @@ source('params.R')
 # <<values below are test values>>
 s3SyncBuckets(source_bucket = paste0('s3://', INGRESS_BUCKET,'/'),
               destination_bucket = paste0('s3://', PRE_ETL_BUCKET,'/staging/'))
+
 #############
 # Sync the pre-ETL bucket to local EC2 instance
 #############
@@ -21,22 +22,8 @@ s3SyncToLocal(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/staging'), local_
 #############
 # Get bucket params and file list
 #############
-## Get a list of all Objects in the PRE_ETL S3 bucket 
-# s3lsBucketObjects(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/'),
-#                   output_file = FILE_LIST_OUTPUT)
-
-# # Get bucket params
-# bucket_params <- list(uploadType='S3',
-#                       concreteType='org.sagebionetworks.repo.model.project.ExternalS3StorageLocationSetting',
-#                       bucket=PRE_ETL_BUCKET)
-
-# The above list is just to verify/reference, 
-# since we will replicate the structure locally
-# we will work with that
-
+# We will work with the locally replicated structure 
 # all folders inside the AWS_DOWNLOAD_LOCATION
-# When we create dataFileHandleId in synapse it will create some folders in the source S3 bucket
-# we don't need those
 localDirs <- list.dirs(path = AWS_DOWNLOAD_LOCATION, full.names = FALSE) 
 
 ## The folders we want to show in synapse
@@ -45,6 +32,8 @@ FOLDERS_TO_SYNC_SYNAPSE <- c('adults',
                              'pregnant',
                              'pediatric') 
 
+# When we create dataFileHandleId in synapse it will create some folders in the source S3 bucket
+# we don't need those
 ## From the local AWS location remove all folders that are not the ones selected above
 dirs_to_delete <- dplyr::setdiff(localDirs, c(FOLDERS_TO_SYNC_SYNAPSE, "")) # "" is the local directory, a result of list.dirs(.. full.names=FALSE)
 

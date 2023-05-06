@@ -58,7 +58,7 @@ if(nrow(synapse_manifest_to_upload) > 0){ # there are some files to upload
     # file and related synapse parent id 
     file_= synapse_manifest_to_upload$path[file_number]
     parent_id = synapse_manifest_to_upload$parent[file_number]
-    s3_file_key = synapse_manifest_to_upload$file_key[file_number]
+    s3_file_key = paste0('staging/',synapse_manifest_to_upload$file_key[file_number])
     # this would be the location of the file in the S3 bucket, in the local it is at {AWS_DOWNLOAD_LOCATION}/
     
     absolute_file_path <- tools::file_path_as_absolute(file_) # local absolute path
@@ -78,4 +78,5 @@ if(nrow(synapse_manifest_to_upload) > 0){ # there are some files to upload
     
   }
 }
+
 
