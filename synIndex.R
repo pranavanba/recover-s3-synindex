@@ -8,8 +8,7 @@
 ### Synapse credentials
 #############
 # Set the environment variables .Renviron file in your home folder. Refer to README for more details
-SYNAPSE_USERNAME= Sys.getenv('SYNAPSE_USERNAME')
-SYNAPSE_PASSWORD= Sys.getenv('SYNAPSE_PASSWORD')
+SYNAPSE_AUTH_TOKEN = Sys.getenv('SYNAPSE_AUTH_TOKEN')
 
 #############
 # Required functions and libraries
@@ -18,8 +17,7 @@ library(tidyverse)
 library(synapser)
 library(synapserutils)
 library(rjson)
-synapser::synLogin(SYNAPSE_USERNAME,
-                   SYNAPSE_PASSWORD)
+synapser::synLogin(authToken=SYNAPSE_AUTH_TOKEN)
 source('~/recover-s3-synindex/awscli_utils.R')
 
 #############
