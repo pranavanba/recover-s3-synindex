@@ -11,7 +11,7 @@ This repository helps index S3 objects in Synapse from a S3 bucket attached to a
 
 Note: If you are having issues during installation, consider upgrading your pip `python -m pip install --upgrade pip` before trying to reinstall synapseclient - this should clear most issues. If you still have issues try force re-install synapseclient from the terminal `pip install --upgrade --force-reinstall synapseclient`
 
-4. Create a `.Renviron` file in the home folder with the environment variables `SYNAPSE_USERNAME`, `SYNAPSE_PASSWORD` and `SYNASPECLIENT_INSTALL_PATH`, where `SYNAPSECLIENT_INSTALL_PATH` is the path where the script synapse is installed when synapseclient was installed in step 2.
+4. Create a `.Renviron` file in the home folder with the environment variables `SYNAPSE_AUTH_TOKEN` and `SYNASPECLIENT_INSTALL_PATH`. `SYNAPSECLIENT_INSTALL_PATH` is the path where the script synapse is installed when synapseclient was installed in step 2. If you did not note it down, use `pip show synapseclient` to see where synapseclient was installed. The `SYNAPSE_AUTH_TOKEN` should have view, modify and download permissions. If you don't have one, get a new token at [Personal Access Token in Synapse](https://www.synapse.org/#!PersonalAccessTokens:)
 
 ## Setting up SSM Access to the S3 bucket
 5. Please follow instructions to [Create a Synapse personal access token(for AWS SSM Access)](https://sagebionetworks.jira.com/wiki/spaces/SC/pages/938836322/Service+Catalog+Provisioning#Create-a-Synapse-personal-access-token) 
