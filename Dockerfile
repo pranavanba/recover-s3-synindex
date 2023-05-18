@@ -2,9 +2,10 @@ FROM rocker/r-ver:4.2.2
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get install -y git python3 python3-pip python3-venv && \
+    apt-get install -y git python3 python3-pip python3-venv curl && \
     python -m pip install --upgrade pip && \
-    pip install --upgrade --force-reinstall synapseclient
+    pip install --upgrade --force-reinstall synapseclient && \
+    sudo yum install -y https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm
 
 ENV SYNAPSE_AUTH_TOKEN=<synapse_auth_token>
 ENV SYNASPECLIENT_INSTALL_PATH=home/ubuntu/.local/bin
