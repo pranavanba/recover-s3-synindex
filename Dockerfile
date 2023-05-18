@@ -7,8 +7,10 @@ RUN apt-get update -y && \
     pip install --upgrade --force-reinstall synapseclient && \
     sudo yum install -y https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm
 
+RUN SYNASPECLIENT_INSTALL_PATH=$(python3 -c "import synapseclient; print(synapseclient.__path__[0])")
+
 ENV SYNAPSE_AUTH_TOKEN=<synapse_auth_token>
-ENV SYNASPECLIENT_INSTALL_PATH=home/ubuntu/.local/bin
+ENV SYNASPECLIENT_INSTALL_PATH=$SYNASPECLIENT_INSTALL_PATH
 
 RUN git clone https://github.com/itismeghasyam/recover-s3-synindex
 
