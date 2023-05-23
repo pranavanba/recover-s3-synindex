@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 rocker/r-ver:4.2.2
+FROM --platform=linux/amd64 rocker/tidyverse:4.2.2
 
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y python3 python3-pip curl unzip git
 
