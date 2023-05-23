@@ -8,11 +8,11 @@ RUN pip install synapseclient
 
 # RUN SYNASPECLIENT_INSTALL_PATH=$(python3 -c "import synapseclient; print(synapseclient.__path__[0])")
 # ENV SYNASPECLIENT_INSTALL_PATH=$SYNASPECLIENT_INSTALL_PATH
-RUN export SYNASPECLIENT_INSTALL_PATH="'/usr/local/lib'"
+ENV SYNASPECLIENT_INSTALL_PATH="'/usr/local/lib'"
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
-    /aws/install
+    ./aws/install
 
 RUN curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb" && \
     dpkg -i session-manager-plugin.deb
