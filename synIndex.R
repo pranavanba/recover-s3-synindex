@@ -13,7 +13,6 @@ SYNAPSE_AUTH_TOKEN = Sys.getenv('SYNAPSE_AUTH_TOKEN')
 #############
 # Required functions and libraries
 #############
-library(tidyverse)
 library(synapser)
 library(synapserutils)
 library(rjson)
