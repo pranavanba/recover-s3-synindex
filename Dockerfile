@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 rocker/tidyverse:4.2.2
+FROM rocker/tidyverse
 
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y python3 python3-pip curl unzip git
 
@@ -29,8 +29,6 @@ credential_process = \"/synapse_creds.sh\" \"https://sc.sageit.org\" \"\${AWS_TO
 
 RUN git clone -b add-docker-workflow https://github.com/pranavanba/recover-s3-synindex /recover-s3-synindex
 
-WORKDIR /recover-s3-synindex
+RUN Rscript /recover-s3-synindex/install_requirements.R
 
-RUN Rscript install_requirements.R
-
-CMD R -e "q()" && Rscript data_sync.R && Rscript generate_manifest.R && Rscript synIndex.R
+CMD R -e "q()" && bash /recover-s3-synindex/ingress_pipeline.sh
