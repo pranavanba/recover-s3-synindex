@@ -8,8 +8,7 @@ RUN pip install synapseclient
 
 # RUN SYNASPECLIENT_INSTALL_PATH=$(python3 -c "import synapseclient; print(synapseclient.__path__[0])")
 # ENV SYNASPECLIENT_INSTALL_PATH=$SYNASPECLIENT_INSTALL_PATH
-RUN echo "SYNASPECLIENT_INSTALL_PATH='/usr/local/lib'" > /.Renviron
-RUN echo ${SYNAPSE_AUTH_TOKEN} > /.Renviron
+RUN export SYNASPECLIENT_INSTALL_PATH="'/usr/local/lib'"
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
@@ -32,4 +31,4 @@ RUN git clone -b add-docker-workflow https://github.com/pranavanba/recover-s3-sy
 
 RUN Rscript /recover-s3-synindex/install_requirements.R
 
-CMD R -e "q()" && cat /.Renviron
+CMD R -e "q()" && printenv
