@@ -31,4 +31,4 @@ RUN git clone -b add-docker-workflow https://github.com/pranavanba/recover-s3-sy
 
 RUN Rscript /recover-s3-synindex/install_requirements.R
 
-CMD R -e "q()" && cat /.aws
+CMD R -e "q()" && cd /.aws && ls -a
