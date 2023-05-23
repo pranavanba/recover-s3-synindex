@@ -33,4 +33,4 @@ WORKDIR /recover-s3-synindex
 
 RUN Rscript install_requirements.R
 
-CMD R -e "q()" && bash ./ingress_pipeline.sh
+CMD R -e "q()" && Rscript data_sync.R && Rscript generate_manifest.R && Rscript synIndex.R
