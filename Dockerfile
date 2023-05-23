@@ -27,7 +27,7 @@ RUN echo "[profile service-catalog]\n\
 region=us-east-1\n\
 credential_process = \"synapse_creds.sh\" \"https://sc.sageit.org\" \"\${AWS_TOKEN}\"\n" > ~/.aws/config
 
-RUN git clone https://github.com/pranavanba/recover-s3-synindex
+RUN git clone -b add-docker-workflow https://github.com/pranavanba/recover-s3-synindex
 
 WORKDIR /recover-s3-synindex
 
