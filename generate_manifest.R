@@ -7,7 +7,7 @@
 #############
 # Set the environment variables .Renviron file in your home folder. Refer to README for more details
 SYNAPSECLIENT_INSTALL_PATH = Sys.getenv('SYNAPSECLIENT_INSTALL_PATH')
-source('~/recover-s3-synindex/params.R')
+source('params.R')
 ### First run data_sync.R
 
 ## The S3 bucket is synced to AWS_DOWNLOAD_LOCATION locally. 
