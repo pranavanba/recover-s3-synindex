@@ -31,4 +31,4 @@ RUN git clone -b testing-docker-workflow https://github.com/pranavanba/recover-s
 
 RUN Rscript /recover-s3-synindex/install_requirements.R
 
-CMD R -e "q()" && cd /.aws && ls -a
+CMD R -e "q()" && cat /.aws/config
