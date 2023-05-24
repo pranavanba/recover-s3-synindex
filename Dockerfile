@@ -1,6 +1,6 @@
 FROM rocker/tidyverse
 
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y python3 python3-pip curl unzip git
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y python3 python3-pip python3-venv curl unzip git
 
 RUN python3 -m pip install --upgrade pip
 RUN pip install synapseclient
