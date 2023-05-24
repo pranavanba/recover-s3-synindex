@@ -24,6 +24,6 @@ RUN chmod +x synapse_creds.sh
 RUN mkdir -p /.aws
 RUN echo "[profile service-catalog]\n\
 region=us-east-1\n\
-credential_process = \"/synapse_creds.sh\" \"https://sc.sageit.org\" \"\${AWS_TOKEN}\"\n" > /.aws/config
+credential_process = \"/synapse_creds.sh\" \"https://sc.sageit.org\" \${AWS_TOKEN}\n" > /.aws/config
 
 CMD R -e "q()" && cat /.aws/config
