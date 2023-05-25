@@ -11,6 +11,6 @@ RUN pip install synapseclient
 RUN git clone -b testing-docker-workflow https://github.com/pranavanba/recover-s3-synindex /recover-s3-synindex
 RUN Rscript /recover-s3-synindex/install_requirements.R
 
-RUN bash /recover-s3-synindex/aws_ssm_setup.sh
+RUN /recover-s3-synindex/aws_ssm_setup.sh
 
 CMD R -e "q()" && bash /recover-s3-synindex/ingress_pipeline.sh
