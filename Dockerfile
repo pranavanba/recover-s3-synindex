@@ -18,8 +18,8 @@ RUN curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubunt
 RUN curl -o synapse_creds.sh https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/synapse_creds.sh \
     && chmod +x synapse_creds.sh
 
-RUN mkdir -p /.aws \
-    && curl -sSL https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/config | sed -e "s|\"<PERSONAL_ACCESS_TOKEN>\"|\${AWS_TOKEN}|g" -e "s|/absolute/path/to/synapse_creds.sh|/synapse_creds.sh|g" > /.aws/config
+RUN mkdir -p /root/.aws \
+    && curl -sSL https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/config | sed -e "s|\"<PERSONAL_ACCESS_TOKEN>\"|\${AWS_TOKEN}|g" -e "s|/absolute/path/to/synapse_creds.sh|/synapse_creds.sh|g" > /root/.aws/config
 
 
 CMD R -e "q()" && bash /recover-s3-synindex/ingress_pipeline.sh
