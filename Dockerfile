@@ -19,6 +19,6 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && curl -o synapse_creds.sh https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/synapse_creds.sh \
     && chmod +x synapse_creds.sh \
     && mkdir -p /.aws \
-    && curl -sSL https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/config | sed "s|<PERSONAL_ACCESS_TOKEN>|${AWS_TOKEN}|g" > /.aws/config
+    && curl -sSL https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/config | sed "s|<PERSONAL_ACCESS_TOKEN>|\${AWS_TOKEN}|g" > /.aws/config
 
 CMD R -e "q()" && bash /recover-s3-synindex/ingress_pipeline.sh
