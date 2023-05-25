@@ -22,5 +22,6 @@ RUN mkdir -p /root/.aws \
     && curl -sSL https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/config | sed -e "s|<PERSONAL_ACCESS_TOKEN>|\"\${AWS_TOKEN}\"|g" -e "s|/absolute/path/to/synapse_creds.sh|/root/synapse_creds.sh|g" > /root/.aws/config
 
 RUN echo "SYNAPSE_AUTH_TOKEN='\${SYNAPSE_AUTH_TOKEN}'" > /root/.Renviron
+RUN echo "SYNAPSECLIENT_INSTALL_PATH='usr/local/lib/'"
 
 CMD R -e "q()" && bash /recover-s3-synindex/ingress_pipeline.sh
