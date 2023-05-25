@@ -18,12 +18,10 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 RUN curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb" && \
     dpkg -i session-manager-plugin.deb
 
-RUN curl -o synapse_creds.sh https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/a1beccb32fad020687568450f89398c6d7daac34/synapse_creds.sh
+RUN curl -o synapse_creds.sh https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/synapse_creds.sh
 RUN chmod +x synapse_creds.sh
 
 RUN mkdir -p /.aws
-RUN echo "[profile service-catalog]\n\
-region=us-east-1\n\
-credential_process = \"/synapse_creds.sh\" \"https://sc.sageit.org\" \${AWS_TOKEN}\n" > /.aws/config
+RUN curl -sSL https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/config | sed "s|<PERSONAL_ACCESS_TOKEN>|${AWS_TOKEN}}|g" > /.aws/config
 
 CMD R -e "q()" && bash /recover-s3-synindex/ingress_pipeline.sh
