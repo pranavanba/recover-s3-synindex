@@ -11,17 +11,6 @@ RUN pip install synapseclient
 RUN git clone -b testing-docker-workflow https://github.com/pranavanba/recover-s3-synindex /recover-s3-synindex
 RUN Rscript /recover-s3-synindex/install_requirements.R
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-    unzip awscliv2.zip && \
-    ./aws/install
-
-RUN curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb" && \
-    dpkg -i session-manager-plugin.deb
-
-RUN curl -o synapse_creds.sh https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/synapse_creds.sh
-RUN chmod +x synapse_creds.sh
-
-RUN mkdir -p /.aws
-RUN curl -sSL https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/config | sed "s|<PERSONAL_ACCESS_TOKEN>|${AWS_TOKEN}|g" > /.aws/config
+RUN bash /recover-s3-synindex/aws_ssm_setup.sh
 
 CMD R -e "q()" && bash /recover-s3-synindex/ingress_pipeline.sh
