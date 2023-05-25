@@ -21,4 +21,4 @@ RUN curl -o /root/synapse_creds.sh https://raw.githubusercontent.com/Sage-Bionet
 RUN mkdir -p /root/.aws \
     && curl -sSL https://raw.githubusercontent.com/Sage-Bionetworks-IT/service-catalog-ssm-access/main/config | sed -e "s|\"<PERSONAL_ACCESS_TOKEN>\"|\"\${AWS_TOKEN}\"\n|g" -e "s|/absolute/path/to/synapse_creds.sh|/root/synapse_creds.sh|g" > /root/.aws/config
 
-CMD R -e "q()" && sed "s|\${AWS_TOKEN}|$AWS_TOKEN|g" /root/.aws/config > /root/.aws/config && bash /recover-s3-synindex/ingress_pipeline.sh
+CMD R -e "q()" && sed -i "s|\${AWS_TOKEN}|$AWS_TOKEN|g" /root/.aws/config > /root/.aws/config && bash /recover-s3-synindex/ingress_pipeline.sh
