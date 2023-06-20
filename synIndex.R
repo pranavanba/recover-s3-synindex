@@ -35,7 +35,7 @@ synapse_manifest <- read.csv('./current_manifest.tsv', sep = '\t', stringsAsFact
   dplyr::filter(path != paste0(AWS_DOWNLOAD_LOCATION,'owner.txt')) %>%  # need not create a dataFileHandleId for owner.txt
   dplyr::rowwise() %>% 
   dplyr::mutate(file_key = stringr::str_sub(string = path, start = STR_LEN_AWS_DOWNLOAD_LOCATION+1)) %>% # location of file from home folder of S3 bucket
-  dplyr::mutate(file_key = paste0('staging/', file_key)) %>% # the namespace for files in the S3 bucket is S3::bucket/staging/
+  dplyr::mutate(file_key = paste0('main/', file_key)) %>% # the namespace for files in the S3 bucket is S3::bucket/main/
   dplyr::mutate(md5_hash = as.character(tools::md5sum(path))) %>% 
   dplyr::ungroup()
 
