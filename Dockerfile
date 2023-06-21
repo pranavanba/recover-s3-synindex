@@ -20,7 +20,7 @@ RUN curl -o /root/synapse_creds.sh https://raw.githubusercontent.com/Sage-Bionet
 
 RUN mkdir -p /root/.aws
 
-COPY /root/recover-s3-synindex/config /root/.aws/config
+COPY config /root/.aws/config
 
 RUN sed -e "s|\"<PERSONAL_ACCESS_TOKEN>\"|\"\${AWS_SYNAPSE_TOKEN}\"\n|g" \
     -e "s|/absolute/path/to/synapse_creds.sh|/root/synapse_creds.sh|g" \
