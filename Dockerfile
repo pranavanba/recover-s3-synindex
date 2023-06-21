@@ -22,7 +22,7 @@ RUN mkdir -p /root/.aws
 
 COPY config /root/.aws/config
 
-RUN sed -e "s|\"<PERSONAL_ACCESS_TOKEN>\"|\"\${AWS_SYNAPSE_TOKEN}\"\n|g" \
+RUN sed -i -e "s|\"<PERSONAL_ACCESS_TOKEN>\"|\"\${AWS_SYNAPSE_TOKEN}\"\n|g" \
     -e "s|/absolute/path/to/synapse_creds.sh|/root/synapse_creds.sh|g" \
     /root/.aws/config
 
