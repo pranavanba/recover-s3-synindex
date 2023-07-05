@@ -5,22 +5,41 @@
 ## Required functions and parameters
 source('~/recover-s3-synindex/awscli_utils.R')
 source('~/recover-s3-synindex/params.R')
+library('aws.s3')
+library('synapser')
 
 #############
-# Sync S3 buckets 
+# Sync S3 ingress bucket to Local EC2 (First Sync )
+# using prod-creds (with 'read' only permissions) for accessing the ingress bucket 
 #############
-# <<values below are test values>>
-s3SyncBuckets(source_bucket = paste0('s3://', INGRESS_BUCKET,'/'),
-              destination_bucket = paste0('s3://', PRE_ETL_BUCKET,'/main/'),
-              aws_profile = 'prod-creds')
-
-#############
-# Sync the pre-ETL bucket to local EC2 instance
-#############
-# <<values below are test values>>
-s3SyncToLocal(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/main'),
+# aws profile used is command line or programmatic access creds from jumpcloud under
+# org-sagebase-identitycentral > S3ExternalCollab
+# these creds are stored in config file under ~/.aws/config 
+s3SyncToLocal(source_bucket = paste0('s3://', INGRESS_BUCKET,'/'),
               local_destination = AWS_DOWNLOAD_LOCATION,
-              aws_profile = 'prod-creds')
+              aws_profile = 's3-external-collab') 
+
+#############
+# Sync Local EC2 (from ingress bucket) to pre_etl bucket (Second Sync )
+#############
+# synapser::synLogin(daemon_acc, daemon_acc_password) # login into Synapse
+synapser::synLogin()
+
+sts_token <- synapser::synGetStsStorageToken(entity = 'syn51789981', # sts enabled destination folder
+                                             permission = 'read_write',  
+                                             output_format = 'json')
+
+# configure the environment with AWS token (this is the aws_profile named 'env-var')
+Sys.setenv('AWS_ACCESS_KEY_ID'=sts_token$accessKeyId,
+           'AWS_SECRET_ACCESS_KEY'=sts_token$secretAccessKey,
+           'AWS_SESSION_TOKEN'=sts_token$sessionToken)
+
+s3SyncFromLocal(local_source = AWS_DOWNLOAD_LOCATION,
+                destination_bucket = paste0('s3://', PRE_ETL_BUCKET,'/main'),
+                aws_profile = 'env-var')
+
+## check if we have download access to PRE_ETL_BUCKET
+## s3SyncToLocal(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/main'),aws_profile = 'env-var',local_destination = './temp_input_data')
 
 #############
 # Get bucket params and file list
