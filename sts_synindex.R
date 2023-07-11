@@ -22,18 +22,26 @@ s3 <- arrow::S3FileSystem$create(
 
 # List Parquet datasets
 base_s3_uri <- paste0(token$bucket, "/", token$baseKey)
-parquet_datasets <- s3$GetFileInfo(arrow::FileSelector$create(base_s3_uri, recursive=F))
+parquet_datasets <- s3$GetFileInfo(arrow::FileSelector$create(base_s3_uri, recursive=T))
 for (dataset in parquet_datasets) {
   print(dataset$path)
 }
 
 AWS_DOWNLOAD_LOCATION <- './temp_aws_parquet'
 
-arrow::copy_files('s3://recover-processed-data/main/parquet', AWS_DOWNLOAD_LOCATION)
-
 list.files('./temp_aws_parquet/', recursive = T) %>% length()
 
-
+patterns <- c("*owner.txt", "*archive*")
+out <- list()
+for (dataset in parquet_datasets) {
+  for (file in dataset$path) {
+    if (!grepl(paste(patterns, collapse = "|"), file)) {
+      # s3$CopyFile(file, paste0(AWS_DOWNLOAD_LOCATION, gsub(base_s3_uri, "", file)))
+      # print(paste0(AWS_DOWNLOAD_LOCATION, gsub(base_s3_uri, "", file)))
+      out <- c(out, paste0(AWS_DOWNLOAD_LOCATION, gsub(base_s3_uri, "", file)))
+    }
+  }
+}
 
 # configure the environment with AWS token
 Sys.setenv('AWS_ACCESS_KEY_ID'=token$accessKeyId,
