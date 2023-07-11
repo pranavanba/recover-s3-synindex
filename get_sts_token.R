@@ -2,17 +2,17 @@ library('aws.s3')
 library('synapser')
 synapser::synLogin(authToken=Sys.getenv("SYNAPSE_AUTH_TOKEN"))
 
-# folder_and_storage_location <- synapser::synCreateS3StorageLocation(parent='syn51406698',
-#                                                                     folder_name='ce-input-data-dev',
-#                                                                     folder=NULL,
-#                                                                     bucket_name='recover-dev-input-data',
-#                                                                     base_key='main',
-#                                                                     sts_enabled=TRUE)
+folder_and_storage_location <- synapser::synCreateS3StorageLocation(parent='syn51849609',
+                                                                    folder_name='ce-input-data-dev',
+                                                                    folder=NULL,
+                                                                    bucket_name='recover-dev-input-data',
+                                                                    base_key='main',
+                                                                    sts_enabled=TRUE)
 
-# folder <- folder_and_storage_location[[1]]
-# storage_location <- folder_and_storage_location[[2]]
+folder <- folder_and_storage_location[[1]]
+storage_location <- folder_and_storage_location[[2]]
 
-sts_token <- synapser::synGetStsStorageToken(entity = 'syn51714264', # MHP Input Data folder
+sts_token <- synapser::synGetStsStorageToken(entity = folder$properties$id, # MHP Input Data folder
                                              permission = 'read_only',
                                              output_format = 'json')
 
@@ -32,4 +32,4 @@ Sys.setenv('AWS_ACCESS_KEY_ID'=sts_token$accessKeyId,
 # cat(credentials, file = aws_config_file, append = TRUE, sep = '\n')
 
 ## list objects in bucket/ list buckets
-bucket_list <- aws.s3::get_bucket_df('recover-input-data', prefix = 'main')
+bucket_list <- aws.s3::get_bucket_df('recover-dev-input-data', prefix = 'main')
