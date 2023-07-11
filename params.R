@@ -2,10 +2,10 @@
 ## Required Parameters
 ################################
 
-INGRESS_BUCKET = 'recover-dev-ingestion' 
+# INGRESS_BUCKET = 'recover-ingestion' 
 # S3 bucket whose objects are being copied
 
-PRE_ETL_BUCKET = 'recover-dev-input-data'
+# PRE_ETL_BUCKET = 'recover-input-data'
 # S3 bucket to where objects are being copied into: recover-dev-input-data
 
 AWS_DOWNLOAD_LOCATION = './temp_aws/main/'

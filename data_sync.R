@@ -10,17 +10,17 @@ source('~/recover-s3-synindex/params.R')
 # Sync S3 buckets 
 #############
 # <<values below are test values>>
-s3SyncBuckets(source_bucket = paste0('s3://', INGRESS_BUCKET,'/'),
-              destination_bucket = paste0('s3://', PRE_ETL_BUCKET,'/main/'),
-              aws_profile = 'dev-creds')
+s3SyncBuckets(source_bucket = paste0('s3://', 'recover-dev-ingestion'),
+              destination_bucket = paste0('s3://', 'recover-dev-input-data'),
+              aws_profile = 'S3ExternalCollab')
 
 #############
 # Sync the pre-ETL bucket to local EC2 instance
 #############
 # <<values below are test values>>
-s3SyncToLocal(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/main'),
+s3SyncToLocal(source_bucket = paste0('s3://', 'recover-ingestion'),
               local_destination = AWS_DOWNLOAD_LOCATION,
-              aws_profile = 'dev-creds')
+              aws_profile = 'S3ExternalCollab')
 
 #############
 # Get bucket params and file list
