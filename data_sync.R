@@ -5,7 +5,6 @@
 ## Required functions and parameters
 source('~/recover-s3-synindex/awscli_utils.R')
 source('~/recover-s3-synindex/params.R')
-library('aws.s3')
 library('synapser')
 
 #############
@@ -22,10 +21,10 @@ s3SyncToLocal(source_bucket = paste0('s3://', INGRESS_BUCKET,'/'),
 #############
 # Sync Local EC2 (from ingress bucket) to pre_etl bucket (Second Sync )
 #############
-# synapser::synLogin(daemon_acc, daemon_acc_password) # login into Synapse
-synapser::synLogin()
+synapser::synLogin(daemon_acc, daemon_acc_password) # login into Synapse
+# synapser::synLogin()
 
-sts_token <- synapser::synGetStsStorageToken(entity = 'syn51789981', # sts enabled destination folder
+sts_token <- synapser::synGetStsStorageToken(entity = 'syn51714264', # sts enabled destination folder
                                              permission = 'read_write',  
                                              output_format = 'json')
 
@@ -34,12 +33,17 @@ Sys.setenv('AWS_ACCESS_KEY_ID'=sts_token$accessKeyId,
            'AWS_SECRET_ACCESS_KEY'=sts_token$secretAccessKey,
            'AWS_SESSION_TOKEN'=sts_token$sessionToken)
 
+
 s3SyncFromLocal(local_source = AWS_DOWNLOAD_LOCATION,
                 destination_bucket = paste0('s3://', PRE_ETL_BUCKET,'/main'),
                 aws_profile = 'env-var')
 
 ## check if we have download access to PRE_ETL_BUCKET
-## s3SyncToLocal(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/main'),aws_profile = 'env-var',local_destination = './temp_input_data')
+# s3SyncToLocal(source_bucket = paste0('s3://', PRE_ETL_BUCKET,'/main'),aws_profile = 'env-var',local_destination = './temp_input_data1')
+
+## list objects from PRE_ETL_BUCKET
+# s3lsBucketObjects(source_bucket =  paste0('s3://', PRE_ETL_BUCKET,'/main'),
+#                   aws_profile = 'env-var')
 
 #############
 # Get bucket params and file list
@@ -50,9 +54,9 @@ localDirs <- list.dirs(path = AWS_DOWNLOAD_LOCATION, full.names = FALSE, recursi
 
 ## The folders we want to show in synapse
 ## This would depend on the how the data is organized in the main S3 INGRESS bucket
-FOLDERS_TO_SYNC_SYNAPSE <- c('adults',
-                             'pregnant',
-                             'pediatric') 
+FOLDERS_TO_SYNC_SYNAPSE <- c('adults\\v1',
+                             'pregnant\\v1',
+                             'pediatric\\v1') 
 
 # When we create dataFileHandleId in synapse it will create some folders in the source S3 bucket
 # we don't need those
