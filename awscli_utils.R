@@ -31,8 +31,8 @@ s3SyncToLocal <- function(source_bucket, local_destination = './temp_aws', aws_p
 s3SyncFromLocal <- function(local_source = './temp_aws', destination_bucket, aws_profile='service-catalog'){
   command_in <- glue::glue('aws --profile {aws_profile} s3 sync {local_source} {destination_bucket}')
   if(aws_profile == 'env-var'){
-    command_in <- glue::glue('aws s3 sync {local_source} {destination_bucket}')
-  }
+    command_in <- glue::glue('aws s3 sync {local_source} {destination_bucket} --acl bucket-owner-full-control')
+  } # need to add acl permisisons as bucket-owner-full-control to upload/put objects in the bucket
   
   print(paste0('RUNNING: ',command_in))
   system(command_in)
