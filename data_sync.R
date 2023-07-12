@@ -18,7 +18,6 @@ s3SyncToLocal(source_bucket = paste0('s3://', INGRESS_BUCKET,'/'),
               local_destination = AWS_DOWNLOAD_LOCATION,
               aws_profile = 's3-external-collab') 
 
-
 #############
 # Rename folders with '\' to have '_' for eg., 'adults\v1' to 'adults_v1'
 #############
