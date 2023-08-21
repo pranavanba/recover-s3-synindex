@@ -11,12 +11,22 @@ library('synapser')
 # Sync S3 ingress bucket to Local EC2 (First Sync )
 # using prod-creds (with 'read' only permissions) for accessing the ingress bucket 
 #############
-# aws profile used is command line or programmatic access creds from jumpcloud under
-# org-sagebase-identitycentral > S3ExternalCollab
-# these creds are stored in config file under ~/.aws/config 
+# synapser::synLogin(daemon_acc, daemon_acc_password) # login into Synapse
+synapser::synLogin()
+
+sts_token <- synapser::synGetStsStorageToken(entity = 'syn52293299', # sts enabled destination folder
+                                             permission = 'read_write',  
+                                             output_format = 'json')
+
+# configure the environment with AWS token (this is the aws_profile named 'env-var')
+Sys.setenv('AWS_ACCESS_KEY_ID'=sts_token$accessKeyId,
+           'AWS_SECRET_ACCESS_KEY'=sts_token$secretAccessKey,
+           'AWS_SESSION_TOKEN'=sts_token$sessionToken)
+
+# access AWS s3 from env set sts token, sts token was requested from Synapse folder above
 s3SyncToLocal(source_bucket = paste0('s3://', INGRESS_BUCKET,'/'),
               local_destination = AWS_DOWNLOAD_LOCATION,
-              aws_profile = 's3-external-collab') 
+              aws_profile = 'env-var') 
 
 #############
 # Rename folders with '\' to have '_' for eg., 'adults\v1' to 'adults_v1'
@@ -40,8 +50,8 @@ localDirs <- list.dirs(path = AWS_DOWNLOAD_LOCATION, full.names = FALSE, recursi
 #############
 # Sync Local EC2 (from ingress bucket) to pre_etl bucket (Second Sync )
 #############
-synapser::synLogin(daemon_acc, daemon_acc_password) # login into Synapse
-# synapser::synLogin()
+# synapser::synLogin(daemon_acc, daemon_acc_password) # login into Synapse
+synapser::synLogin()
 
 sts_token <- synapser::synGetStsStorageToken(entity = 'syn51714264', # sts enabled destination folder
                                              permission = 'read_write',  

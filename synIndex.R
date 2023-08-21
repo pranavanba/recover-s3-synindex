@@ -83,4 +83,24 @@ if(nrow(synapse_manifest_to_upload) > 0){ # there are some files to upload
   }
 }
 
+#############
+# Rename folders with '_' to have '\' for eg., 'adults_v1' to 'adults\v1'
+# to match with the next sync from S3 bucket
+# This is to undo the renaming donw in data_sync.R
+#############
+# We will work with the locally replicated structure 
+# all folders inside the AWS_DOWNLOAD_LOCATION, i.e all folders at AWS_DOWNLOAD_LOCATION/
+localDirs <- list.dirs(path = AWS_DOWNLOAD_LOCATION, full.names = FALSE, recursive = FALSE) 
+
+# The folders are named as 'adults\v1', 'pregnant\v1' and 'pediatric\v1'. We want to remove the
+# '\' and replace it with '_'
+for(dir_ in localDirs){
+  dir_newName <- stringr::str_replace_all(dir_,'_',"\\\\")
+  # rename each folder
+  file.rename(paste0(AWS_DOWNLOAD_LOCATION,"/",dir_), paste0(AWS_DOWNLOAD_LOCATION,"/",dir_newName))
+}
+
+# Get newly renamed folders
+localDirs <- list.dirs(path = AWS_DOWNLOAD_LOCATION, full.names = FALSE, recursive = FALSE) 
+
 
